@@ -5,7 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "fetch": "node src/fetch-issues.js"
+    "fetch": "node src/fetch-issues.js",
+    "db:init": "psql -d crm < ./src/db/schema.sql"
   },
   "repository": {
     "type": "git",
