@@ -8,6 +8,7 @@ edit your .env file with following format:
 ```
 password="your backoffice password here"
 loginusername="your cashbet email here @cashbet.com"
+DATABASE_URL="postgres://user:password@localhost:5432/crm"
 ```
 
 # Running
