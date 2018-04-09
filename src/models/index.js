@@ -19,7 +19,24 @@ function setCsrs(csrs) {
   return Promise.all(insertCsrStack)
 }
 
+function addIssue(issueid, csrid) {
+  const qs = `
+    INSERT INTO issues (issueid, csrid)
+    VALUES ($1, $2);
+  `
+  return db.none(qs, [issueid, csrid])
+}
+
+function clearissues() {
+  const qs = `
+    DELETE FROM issues;
+  `
+  return db.none(qs)
+}
+
 module.exports = {
   getCsrs,
   setCsrs,
+  addIssue,
+  clearIssues,
 }
