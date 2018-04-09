@@ -1,8 +1,10 @@
-const psql = require('pg-promise')
+const db = require('../db')
 
 function getCsrs() {
   const qs = `
-    SELECT * FROM csrs;
+    SELECT * FROM csrs
+    JOIN issues
+    ON issues.csrid = csrs.csrid;
   `
   return db.many(qs)
 }

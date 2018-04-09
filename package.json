@@ -4,7 +4,8 @@
   "description": "distributes items evenly amongst people via login to external server with private data",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "fetch": "node src/fetch-issues.js"
   },
   "repository": {
     "type": "git",
