@@ -11,7 +11,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', async (request, response) => {
-  const csrs = await getCsrs() || [{ 'name': 'sample', 'issues': [101, 102] }]
+  const csrs = await getCsrs() || [{ 'username': 'sample', 'issues': [101, 102] }]
 
   response.render('index', csrs)
 })
