@@ -10,10 +10,10 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/', async (request, response) => {
-  const csrs = await getCsrs() || [{ 'username': 'sample', 'issues': [101, 102] }]
+app.use('/', require('./routes'))
 
-  response.render('index', csrs)
+app.use((req, res) => {
+  res.status(404).render('not_found')
 })
 
 const PORT = process.env.PORT || 5000
