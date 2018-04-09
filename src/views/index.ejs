@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible">
+  <title>Issue Distributor</title>
+</head>
+<body>
+  <div class="container">
+    <div class="input">
+      <ul>
+        <li><input type="text" name="name" id="name"></li>
+        <li><button id="add-csr">Add CSR</button></li>
+      </ul>
+    </div>
+    <div class="output">
+      <ul>
+        <% for(let i = 0; i < csrs.length; i++) { %>
+          <li>
+            <div class="csr-info">
+              <a class="delete-csr" id="delete-csr-<%= csrs[i].id %>" href="#">X</a>
+              <h3><%csrs[i].name%></h3>
+            </div>
+            <% for(let j = 0; i < csrs[i].issueList.length; j++) { %>
+              <p><% csrs[i].issueList[j] %></p>
+            <% } %>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
