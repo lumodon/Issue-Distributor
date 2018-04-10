@@ -56,3 +56,11 @@ ul {
   color: red;
   display: none;
 }
+
+#fetch-issueids {
+  margin: 5px;
+  border: solid 4px red;
+  padding: 5px;
+  font-size: 2em;
+  color:red;
+}

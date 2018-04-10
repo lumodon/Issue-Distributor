@@ -41,7 +41,7 @@ function processPage(document) {
 async function getIssueIds() {
   const fetchOptions = getFetchOptions(await getLoginCookie())
   const urlStart = 'https://icobo.cashbet.com/crm/work_queues/index/page:1'
-  const issueIds = []
+  let issueIds = []
 
   return fetchDelay(urlStart, fetchOptions)
     .then(async res => (await res.text()).toString())
@@ -56,7 +56,7 @@ async function getIssueIds() {
 
       return numberOfPages
     })
-    .then((numberOfPages) => {
+    .then(async (numberOfPages) => {
       for(let pageIterator = 2; pageIterator <= numberOfPages; pageIterator++) {
         const urlPage = `https://icobo.cashbet.com/crm/work_queues/index/page:${pageIterator}`
         const appendableIds = await fetchDelay(urlPage, fetchOptions)
