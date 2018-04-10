@@ -1,8 +1,7 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const path = require('path')
-const { getCsrs, setCsrs, addIssue, clearIssues } = require('./models')
-require('dotenv').config()
 require('ejs')
 
 app.set('view engine', 'ejs')

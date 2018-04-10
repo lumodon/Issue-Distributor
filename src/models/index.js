@@ -1,4 +1,4 @@
-const db = require('../db')
+const { db } = require('../db')
 
 function getCsrs() {
   const qs = `
@@ -6,7 +6,7 @@ function getCsrs() {
     JOIN issues
     ON issues.csrid = csrs.csrid;
   `
-  return db.many(qs)
+  return db.manyOrNone(qs)
 }
 
 function setCsrs(csrs) {
@@ -29,7 +29,7 @@ function addIssue(issueid, csrid) {
   return db.none(qs, [issueid, csrid])
 }
 
-function clearissues() {
+function clearIssues() {
   const qs = `
     DELETE FROM issues;
   `
