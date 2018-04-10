@@ -25,15 +25,14 @@ function deleteCsr(csrid) {
   return db.one(qs, [csrid])
 }
 
-function addIssues(issueIds) {
+function addIssues(issueData) {
   const resolveIssueInsertions = []
-  issueIds.forEach(issueid => {
+  issueData.forEach(issuedataitem => {
     const qs = `
-      INSERT INTO issues (issueid)
-      VALUES ($1)
-      ON CONFLICT DO NOTHING;
+      INSERT INTO issues (issueid, options)
+      VALUES ($1, $2);
     `
-    const issueInsertion = db.none(qs, [issueid])
+    const issueInsertion = db.none(qs, [issuedataitem.issueid, issuedataitem.options])
     resolveIssueInsertions.push(issueInsertion)
   })
   return Promise.all(resolveIssueInsertions)

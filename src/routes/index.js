@@ -15,7 +15,6 @@ router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
   const issueData = await getIssues()
   const { difficultIssueIds, issueIds } = await extractIssueData(issueData)
-  debugger;
   if(csrsData && csrsData.length > 0) {
     const numPerCsr = Math.floor(issueIds.length / csrsData.length)
     const leftOver = issueIds.length % csrsData.length
@@ -36,14 +35,12 @@ router.post('/api/issueids', async (request, response) => {
   if(validation === 'validation_confirmed') {
     let issueData = await getIssues()
     let newIssueIds = await getIssueIds()
-    issueData = issueData.filter(issueidData =>
-      newIssueIds.includes(issueidData.issueid))
-    const { difficultIssueIds, issueIds } = await extractIssueData(issueData)
-    newIssueIds = newIssueIds.filter(issueid =>
-      !issueIds.includes(issueid))
-      .concat(issueIds)
+    newIssueIds = newIssueIds.map(issueId => {
+      const optionValue = issueData.find(it => it.issueid === issueId)
+      return { 'issueid': issueId, 'options': optionValue ? optionValue.options : '' }
+    })
     await clearIssues()
-    addIssues(newIssueIds)
+    await addIssues(newIssueIds)
     response.send({ newIssueIds })
     return true
   }
