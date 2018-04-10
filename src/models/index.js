@@ -27,12 +27,12 @@ function deleteCsr(csrid) {
   return db.one(qs, [csrid])
 }
 
-function addIssue(issueid, csrid) {
+function addIssue(issueid) {
   const qs = `
-    INSERT INTO issues (issueid, csrid)
-    VALUES ($1, $2);
+    INSERT INTO issues (issueid)
+    VALUES ($1);
   `
-  return db.none(qs, [issueid, csrid])
+  return db.none(qs, [issueid])
 }
 
 function clearIssues() {

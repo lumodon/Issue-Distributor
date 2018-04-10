@@ -7,6 +7,5 @@ CREATE TABLE csrs (
 );
 
 CREATE TABLE issues (
-  issueid SERIAL PRIMARY KEY,
-  csrid INTEGER REFERENCES csrs(csrid) ON DELETE CASCADE NOT NULL
+  issueid INTEGER PRIMARY KEY,
 );
