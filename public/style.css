@@ -1,0 +1,50 @@
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.csr-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  max-width: 300px;
+}
+
+.csr-info h3 {
+  margin: 0;
+  height: 20px;
+  max-width: 30vw;
+
+}
+
+.csr-info a {
+  margin: 0;
+  height: 20px;
+  width: 40px;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 95vw;
+}
+
+#list-of-csrs {
+  margin-top: 50px;
+}
+
+#input-section {
+  flex: 2 2;
+}
+
+#output-section {
+  flex: 5 5;
+  border-left: none;
+}
+
+.container > div {
+  border: solid 1px black;
+  padding: 30px;
+}

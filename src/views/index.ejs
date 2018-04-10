@@ -4,32 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible">
+  <link rel="stylesheet" href="/style.css">
   <title>Issue Distributor</title>
 </head>
 <body>
   <div class="container">
-    <div class="input">
+    <div id="input-section">
       <ul>
         <li><input type="text" name="csr-username" id="csr-username"></li>
         <li><button id="add-csr">Add CSR</button></li>
       </ul>
-    </div>
-    <div class="output">
-      <div id="list-of-csrs"></div>
-      <ul>
+      <ul id="list-of-csrs">
         <% for(let i = 0; i < csrs.length; i++) { %>
           <li>
             <div class="csr-info">
-              <a class="delete-csr" id="delete-csr-<%= csrs[i].id %>" href="#">X</a>
-              <h3><%csrs[i].name%></h3>
+              <a class="delete-csr" id="<%= 'delete-csr-' + csrs[i].id %>" href="#">X</a>
+              <h3><%= csrs[i].username %></h3>
             </div>
-            <% for(let j = 0; i < csrs[i].issueList.length; j++) { %>
-              <p><% csrs[i].issueList[j] %></p>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+    <div id="output-section">
+      <ul>
+        <% for(let i = 0; i < csrs.length; i++) { %>
+          <li>
+            <h3><%= csrs[i].username %>:</h3>
+            <% if(csrs[i].issueList) { %>
+              <% for(let j = 0; i < csrs[i].issueList.length; j++) { %>
+                <p><%= csrs[i].issueList[j] %></p>
+              <% } %>
             <% } %>
           </li>
         <% } %>
       </ul>
     </div>
   </div>
+  <script type="text/javascript" src="/scripts/add-csr.js"></script>
+  <script type="text/javascript" src="/scripts/main.js"></script>
 </body>
 </html>

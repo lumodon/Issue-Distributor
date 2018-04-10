@@ -2,8 +2,8 @@ const { db } = require('../db')
 
 function getCsrs() {
   const qs = `
-    SELECT * FROM csrs
-    JOIN issues
+    SELECT csrs.csrid, csrs.username, issues.issueid FROM csrs
+    LEFT JOIN issues
     ON issues.csrid = csrs.csrid;
   `
   return db.manyOrNone(qs)
@@ -12,9 +12,10 @@ function getCsrs() {
 function addCsr(username) {
   const qs = `
     INSERT INTO csrs (username)
-    VALUES ($1);
+    VALUES ($1)
+    RETURNING *;
   `
-  db.none(qs, [username])
+  return db.one(qs, [username])
 }
 
 function addIssue(issueid, csrid) {
