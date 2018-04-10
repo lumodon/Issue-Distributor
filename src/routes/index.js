@@ -15,14 +15,17 @@ router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
   const issueData = await getIssues()
   const { difficultIssueIds, issueIds } = await extractIssueData(issueData)
+  debugger;
   if(csrsData && csrsData.length > 0) {
     const numPerCsr = Math.floor(issueIds.length / csrsData.length)
     const leftOver = issueIds.length % csrsData.length
     csrsData.forEach(csrObj => {
       csrObj.issueList = issueIds.splice(0, numPerCsr)
     })
-    if(leftOver > 0) {
-      csrsData[0].issueList.push(...issueIds.splice(0, leftOver))
+    let cylceIterator = 0
+    while(issueIds.length > 0) {
+      cylceIterator++
+      csrsData[cylceIterator % csrsData.length].issueList.push(issueIds.pop())
     }
   }
   response.render('index', { csrs: csrsData, difficultIssueIds })
