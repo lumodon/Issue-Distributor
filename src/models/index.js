@@ -18,6 +18,15 @@ function addCsr(username) {
   return db.one(qs, [username])
 }
 
+function deleteCsr(csrid) {
+  const qs = `
+    DELETE FROM csrs
+    WHERE csrs.csrid = $1
+    RETURNING *;
+  `
+  return db.one(qs, [csrid])
+}
+
 function addIssue(issueid, csrid) {
   const qs = `
     INSERT INTO issues (issueid, csrid)
@@ -36,6 +45,7 @@ function clearIssues() {
 module.exports = {
   getCsrs,
   addCsr,
+  deleteCsr,
   addIssue,
   clearIssues,
 }
