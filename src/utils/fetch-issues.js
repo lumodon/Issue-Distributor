@@ -1,6 +1,6 @@
 require('dotenv').config()
 const fetch = require('node-fetch')
-const { getLoginCookie } = require('./utils/get-login-cookie')
+const { getLoginCookie } = require('./get-login-cookie')
 const { JSDOM } = require('jsdom')
 
 function fetchDelay(...args) {
@@ -31,6 +31,13 @@ function getFetchOptions(sessionToken) {
   }
 }
 
+function processPage(document) {
+  const getChild = (domEle, column) => domEle.querySelector(`td:nth-child(${column})`)
+  return Array.from(document.querySelectorAll('.issue.open'))
+    .filter(row => getChild(row, 6).innerText === 'CYNOPSIS KYC PENDING')
+    .map(row => Number(getChild(row, 5).innerText))
+}
+
 async function getIssueIds() {
   const fetchOptions = getFetchOptions(await getLoginCookie())
   const urlStart = 'https://icobo.cashbet.com/crm/work_queues/index/page:1'
@@ -40,7 +47,7 @@ async function getIssueIds() {
     .then(async res => (await res.text()).toString())
     .then((resultBody) => new JSDOM(resultBody).window.document)
     .then((document) => {
-      processPage(document, issueIds)
+      issueIds = [...issueIds, ...processPage(document)]
       const numberOfPages = (() => {
         const tib = document.querySelectorAll('.table-info-box')[0]
         const pageTotal = tib.innerText.split(' of ')[1]
@@ -52,15 +59,16 @@ async function getIssueIds() {
     .then((numberOfPages) => {
       for(let pageIterator = 2; pageIterator <= numberOfPages; pageIterator++) {
         const urlPage = `https://icobo.cashbet.com/crm/work_queues/index/page:${pageIterator}`
-        await fetchDelay(urlPage, fetchOptions)
+        const appendableIds = await fetchDelay(urlPage, fetchOptions)
           .then(async res => (await res.text()).toString())
           .then((resultBody) => new JSDOM(resultBody).window.document)
-          .then((document) => {
-            processPage(document, issueIds)
-            return true
-          })
+          .then(document => processPage(document))
+        issueIds = [...issueIds, ...appendableIds]
       }
+      return issueIds
     })
 }
 
-getIssueIds()
+module.exports = {
+  getIssueIds,
+}
