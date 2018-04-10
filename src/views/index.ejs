@@ -33,7 +33,7 @@
           <% if(csrs[i].issueList) { %>
             <li class="output-csr" id="<%= 'csr-' + csrs[i].csrid %>">
               <h3><%= csrs[i].username %>:</h3>
-              <% for(let j = 0; i < csrs[i].issueList.length; j++) { %>
+              <% for(let j = 0; j < csrs[i].issueList.length; j++) { %>
                 <p><%= csrs[i].issueList[j] %></p>
               <% } %>
             </li>
