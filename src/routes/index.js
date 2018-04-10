@@ -6,7 +6,6 @@ router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
   const issueData = await getIssues()
   const issueIds = issueData.map(issueObject => issueObject.issueid)
-  debugger;
   if(csrsData && csrsData.length > 0) {
     const numPerCsr = Math.floor(issueIds.length / csrsData.length)
     const leftOver = issueIds.length % csrsData.length
