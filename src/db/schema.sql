@@ -7,5 +7,5 @@ CREATE TABLE csrs (
 );
 
 CREATE TABLE issues (
-  issueid INTEGER PRIMARY KEY,
+  issueid INTEGER PRIMARY KEY
 );

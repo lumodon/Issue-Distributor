@@ -34,8 +34,8 @@ function getFetchOptions(sessionToken) {
 function processPage(document) {
   const getChild = (domEle, column) => domEle.querySelector(`td:nth-child(${column})`)
   return Array.from(document.querySelectorAll('.issue.open'))
-    .filter(row => getChild(row, 6).innerText === 'CYNOPSIS KYC PENDING')
-    .map(row => Number(getChild(row, 5).innerText))
+    .filter(row => getChild(row, 6).textContent === 'CYNOPSIS KYC PENDING')
+    .map(row => Number(getChild(row, 5).textContent))
 }
 
 async function getIssueIds() {
@@ -50,7 +50,7 @@ async function getIssueIds() {
       issueIds = [...issueIds, ...processPage(document)]
       const numberOfPages = (() => {
         const tib = document.querySelectorAll('.table-info-box')[0]
-        const pageTotal = tib.innerText.split(' of ')[1]
+        const pageTotal = tib.textContent.split(' of ')[1]
         return Math.ceil(Number(pageTotal / 50))
       })()
 

@@ -2,9 +2,7 @@ const { db } = require('../db')
 
 function getCsrs() {
   const qs = `
-    SELECT csrs.csrid, csrs.username, issues.issueid FROM csrs
-    LEFT JOIN issues
-    ON issues.csrid = csrs.csrid;
+    SELECT * FROM csrs;
   `
   return db.manyOrNone(qs)
 }
