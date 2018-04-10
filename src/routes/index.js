@@ -12,6 +12,9 @@ router.post('/api/issueids', async (request, response) => {
   const { validation } = request.body
   if(validation === 'validation_confirmed') {
     issueIds = await getIssueIds()
+    issueIds.forEach(issueid => {
+      addIssue(issueid)
+    })
     response.send({ issueIds })
     return true
   }
