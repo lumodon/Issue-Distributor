@@ -5,7 +5,14 @@ const { getIssueIds } = require('../utils/fetch-issues')
 router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
   const issueData = await getIssues()
-  const issueIds = issueData.map(issueObject => issueObject.issueid)
+  const difficultIssueIds = issueData
+    .filter(issueObject => issueObject.options === 'difficult')
+  const issueIds = issueData.reduce((acc, issueObject) => {
+    if(issueObject.options !== 'difficult') {
+      return [...acc, issueObject.issueid]
+    }
+    return acc
+  }, [])
   if(csrsData && csrsData.length > 0) {
     const numPerCsr = Math.floor(issueIds.length / csrsData.length)
     const leftOver = issueIds.length % csrsData.length
@@ -16,7 +23,7 @@ router.get('/', async (request, response) => {
       csrsData[0].issueList.push(...issueIds.splice(0, leftOver))
     }
   }
-  response.render('index', { csrs: csrsData })
+  response.render('index', { csrs: csrsData, difficultIssueIds })
 })
 
 router.post('/api/issueids', async (request, response) => {
@@ -45,5 +52,13 @@ router.post('/api/deletecsr', async (request, response) => {
   const responseObj = { succeeded: deletedcsr ? true : false }
   response.send(responseObj)
 })
+
+router.post('/api/toggleissue', async (request, response) => {
+  const { issueid, option } = request.body
+  const toggledIssue = await deleteCsr(csrid)
+  const responseObj = { succeeded: toggledIssue ? true : false }
+  response.send(responseObj)
+})
+
 
 module.exports = router
