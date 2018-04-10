@@ -27,12 +27,20 @@ function deleteCsr(csrid) {
   return db.one(qs, [csrid])
 }
 
-function addIssue(issueid) {
-  const qs = `
-    INSERT INTO issues (issueid)
-    VALUES ($1);
-  `
-  return db.none(qs, [issueid])
+function addIssues(issueIds) {
+  const resolveIssueInsertions = []
+  return clearIssues()
+    .then(() => {
+      issueIds.forEach(issueid => {
+        const qs = `
+          INSERT INTO issues (issueid)
+          VALUES ($1);
+        `
+        const issueInsertion = db.none(qs, [issueid])
+        resolveIssueInsertions.push(issueInsertion)
+      })
+      return Promise.all(resolveIssueInsertions)
+    })
 }
 
 function clearIssues() {
@@ -46,6 +54,5 @@ module.exports = {
   getCsrs,
   addCsr,
   deleteCsr,
-  addIssue,
-  clearIssues,
+  addIssues,
 }

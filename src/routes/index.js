@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { getCsrs, addCsr, addIssue, deleteCsr, clearIssues } = require('../models')
+const { getCsrs, addCsr, addIssues, deleteCsr, clearIssues } = require('../models')
 const { getIssueIds } = require('../utils/fetch-issues')
 
 router.get('/', async (request, response) => {
@@ -12,9 +12,7 @@ router.post('/api/issueids', async (request, response) => {
   const { validation } = request.body
   if(validation === 'validation_confirmed') {
     issueIds = await getIssueIds()
-    issueIds.forEach(issueid => {
-      addIssue(issueid)
-    })
+    addIssues(issueIds)
     response.send({ issueIds })
     return true
   }
