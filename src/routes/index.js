@@ -1,10 +1,21 @@
 const router = require('express').Router()
-const { getCsrs, addCsr, addIssues, deleteCsr, clearIssues } = require('../models')
+const { getCsrs, addCsr, addIssues, deleteCsr, getIssues } = require('../models')
 const { getIssueIds } = require('../utils/fetch-issues')
 
 router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
-  console.log('csrs:' , csrsData)
+  const issueData = await getIssues()
+  const issueIds = issueData.map(issueObject => issueObject.issueid)
+  if(csrsData && csrsData.length > 0) {
+    const numPerCsr = Math.floor(issueIds.length / csrsData.length)
+    const leftOver = issueIds.length % csrsData.length
+    csrsData.forEach(csrObj => {
+      csrObj.issueList = issueIds.splice(0, numPerCsr)
+    })
+    if(leftOver > 0) {
+      csrsData[0].issueList.push(...issueIds.splice(0, leftOver))
+    }
+  }
   response.render('index', { csrs: csrsData })
 })
 
@@ -16,7 +27,9 @@ router.post('/api/issueids', async (request, response) => {
     response.send({ issueIds })
     return true
   }
-  response.status(304).send('No issueIds modified - requires validation to prevent accidental repeated server calls')
+  response.status(304).send({
+    'error': 'No issueIds modified - requires validation to prevent accidental repeated server calls',
+  })
 })
 
 router.post('/api/addcsr', async (request, response) => {

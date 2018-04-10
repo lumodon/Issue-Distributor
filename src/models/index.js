@@ -41,6 +41,13 @@ function addIssues(issueIds) {
     })
 }
 
+function getIssues() {
+  const qs = `
+    SELECT * FROM issues;
+  `
+  return db.manyOrNone(qs)
+}
+
 function clearIssues() {
   const qs = `
     DELETE FROM issues;
@@ -53,4 +60,5 @@ module.exports = {
   addCsr,
   deleteCsr,
   addIssues,
+  getIssues,
 }

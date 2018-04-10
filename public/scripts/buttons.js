@@ -30,9 +30,11 @@ function activateUpdateIssuesButton() {
       },
     })
       .then(response => response.json())
-      .then(({ issueIds }) => {
-        if(issueIds) {
-          console.log(issueIds)
+      .then((response) => {
+        if(reponse.issueIds) {
+          location.reload()
+        } else {
+          alertMessage(response.error)
         }
         setTimeout(() => {
           fetchIssueButton.style.display = 'block'
