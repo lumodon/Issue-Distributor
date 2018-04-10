@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "fetch": "node src/fetch-issues.js",
-    "db:init": "psql -d issue_dist < ./src/db/schema.sql"
+    "db:init": "psql -d issue_dist < ./src/db/schema.sql",
+    "heroku:db": "heroku pg:backups:restore 'https://s3-us-west-1.amazonaws.com/lumodon-heroku-pg/issue_dist.dump' 'postgres://ptrnggvwotibmo:1c928319a16b45c681ddcbf138ba2f2c692e0100e16c3ec2b69c951778c11d6c@ec2-174-129-206-173.compute-1.amazonaws.com:5432/dglchdcak7oe7'"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,12 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lumodon/Issue-Distributor/issues"
+  },
+  "heroku": {
+    "urls": [
+      "https://boiling-retreat-77548.herokuapp.com/",
+      "https://git.heroku.com/boiling-retreat-77548.git"
+    ]
   },
   "homepage": "https://github.com/lumodon/Issue-Distributor#readme",
   "dependencies": {
