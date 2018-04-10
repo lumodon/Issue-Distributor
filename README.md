@@ -8,6 +8,8 @@ edit your .env file with following format:
 ```
 password="your backoffice password here"
 loginusername="your cashbet email here @cashbet.com"
+BAusername="cashbet username for basic authorization popup"
+BApassword="password for basic authorization popup"
 DATABASE_URL="postgres://user:password@localhost:5432/crm"
 ```
 
