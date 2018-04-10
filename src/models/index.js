@@ -41,6 +41,24 @@ function addIssues(issueIds) {
     })
 }
 
+function setIssueToDifficult(issueid) {
+  const qs = `
+    UPDATE issues
+    SET options = 'difficult'
+    WHERE issues.issueid = $1
+  `
+  return db.any(qs, [issueid])
+}
+
+function setIssueToNormal(issueid) {
+  const qs = `
+    UPDATE issues
+    SET options = ''
+    WHERE issues.issueid = $1
+  `
+  return db.any(qs, [issueid])
+}
+
 function getIssues() {
   const qs = `
     SELECT * FROM issues;
@@ -61,4 +79,6 @@ module.exports = {
   deleteCsr,
   addIssues,
   getIssues,
+  setIssueToDifficult,
+  setIssueToNormal,
 }

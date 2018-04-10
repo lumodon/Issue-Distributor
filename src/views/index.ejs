@@ -34,11 +34,23 @@
             <li class="output-csr" id="<%= 'csr-' + csrs[i].csrid %>">
               <h3><%= csrs[i].username %>:</h3>
               <% for(let j = 0; j < csrs[i].issueList.length; j++) { %>
-                <p><%= csrs[i].issueList[j] %></p>
+                <div>
+                  <span><%= csrs[i].issueList[j] %></span>
+                  <input type="checkbox" class="checkbox-difficult-off" name="difficult" id="<%= 'checkbox-' + csrs[i].issueList[j] %>">
+                </div>
               <% } %>
             </li>
           <% } %>
         <% } %>
+      </ul>
+      <ul class='list-of-assigned-issues'>
+        <h3>Difficult Issues:</h3>
+        <% difficultIssueIds.forEach(difficultId => { %>
+          <li>
+            <span><%= difficultId %></span>
+            <input type="checkbox" class="checkbox-difficult-on" name="difficult" id="<%= 'checkbox-' + difficultId %>" checked>
+          </li>
+        <% })%>
       </ul>
     </div>
   </div>
