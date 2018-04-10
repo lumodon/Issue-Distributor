@@ -27,18 +27,16 @@ function deleteCsr(csrid) {
 
 function addIssues(issueIds) {
   const resolveIssueInsertions = []
-  return clearIssues()
-    .then(() => {
-      issueIds.forEach(issueid => {
-        const qs = `
-          INSERT INTO issues (issueid)
-          VALUES ($1);
-        `
-        const issueInsertion = db.none(qs, [issueid])
-        resolveIssueInsertions.push(issueInsertion)
-      })
-      return Promise.all(resolveIssueInsertions)
-    })
+  issueIds.forEach(issueid => {
+    const qs = `
+      INSERT INTO issues (issueid)
+      VALUES ($1)
+      ON CONFLICT DO NOTHING;
+    `
+    const issueInsertion = db.none(qs, [issueid])
+    resolveIssueInsertions.push(issueInsertion)
+  })
+  return Promise.all(resolveIssueInsertions)
 }
 
 function setIssueToDifficult(issueid) {
@@ -78,6 +76,7 @@ module.exports = {
   addCsr,
   deleteCsr,
   addIssues,
+  clearIssues,
   getIssues,
   setIssueToDifficult,
   setIssueToNormal,

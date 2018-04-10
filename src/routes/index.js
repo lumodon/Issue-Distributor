@@ -3,24 +3,18 @@ const { getCsrs,
   addCsr,
   addIssues,
   deleteCsr,
-  getIssues,
   setIssueToNormal,
-  setIssueToDifficult 
+  getIssues,
+  clearIssues,
+  setIssueToDifficult
 } = require('../models')
+const { extractIssueData } = require('../utils/extract-issues-data')
 const { getIssueIds } = require('../utils/fetch-issues')
 
 router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
   const issueData = await getIssues()
-  const difficultIssueIds = issueData
-    .filter(issueObject => issueObject.options === 'difficult')
-    .map(container => container.issueid)
-  const issueIds = issueData.reduce((acc, issueObject) => {
-    if(issueObject.options !== 'difficult') {
-      return [...acc, issueObject.issueid]
-    }
-    return acc
-  }, [])
+  const { difficultIssueIds, issueIds } = await extractIssueData(issueData)
   if(csrsData && csrsData.length > 0) {
     const numPerCsr = Math.floor(issueIds.length / csrsData.length)
     const leftOver = issueIds.length % csrsData.length
@@ -37,9 +31,17 @@ router.get('/', async (request, response) => {
 router.post('/api/issueids', async (request, response) => {
   const { validation } = request.body
   if(validation === 'validation_confirmed') {
-    issueIds = await getIssueIds()
-    addIssues(issueIds)
-    response.send({ issueIds })
+    let issueData = await getIssues()
+    let newIssueIds = await getIssueIds()
+    issueData = issueData.filter(issueidData =>
+      newIssueIds.includes(issueidData.issueid))
+    const { difficultIssueIds, issueIds } = await extractIssueData(issueData)
+    newIssueIds = newIssueIds.filter(issueid =>
+      !issueIds.includes(issueid))
+      .concat(issueIds)
+    await clearIssues()
+    addIssues(newIssueIds)
+    response.send({ newIssueIds })
     return true
   }
   response.status(304).send({

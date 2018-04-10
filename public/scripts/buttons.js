@@ -31,7 +31,8 @@ function activateUpdateIssuesButton() {
     })
       .then(response => response.json())
       .then((response) => {
-        if(response.issueIds) {
+        console.log(response)
+        if(response.newIssueIds) {
           location.reload()
         } else {
           alertMessage(response.error)
