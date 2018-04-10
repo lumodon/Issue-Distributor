@@ -1,5 +1,12 @@
 const router = require('express').Router()
-const { getCsrs, addCsr, addIssues, deleteCsr, getIssues } = require('../models')
+const { getCsrs,
+  addCsr,
+  addIssues,
+  deleteCsr,
+  getIssues,
+  setIssueToNormal,
+  setIssueToDifficult 
+} = require('../models')
 const { getIssueIds } = require('../utils/fetch-issues')
 
 router.get('/', async (request, response) => {
@@ -7,6 +14,7 @@ router.get('/', async (request, response) => {
   const issueData = await getIssues()
   const difficultIssueIds = issueData
     .filter(issueObject => issueObject.options === 'difficult')
+    .map(container => container.issueid)
   const issueIds = issueData.reduce((acc, issueObject) => {
     if(issueObject.options !== 'difficult') {
       return [...acc, issueObject.issueid]
@@ -54,8 +62,13 @@ router.post('/api/deletecsr', async (request, response) => {
 })
 
 router.post('/api/toggleissue', async (request, response) => {
-  const { issueid, option } = request.body
-  const toggledIssue = await deleteCsr(csrid)
+  const { issueid, options } = request.body
+  let toggledIssue = null
+  if(options === 'difficult') {
+    toggledIssue = await setIssueToDifficult(issueid)
+  } else {
+    toggledIssue = await setIssueToNormal(issueid)
+  }
   const responseObj = { succeeded: toggledIssue ? true : false }
   response.send(responseObj)
 })

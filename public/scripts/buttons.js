@@ -44,12 +44,12 @@ function activateUpdateIssuesButton() {
 }
 
 function activateChangeDifficultyButton() {
-  const checkboxesOff = document.querySelectorAll('.checkbox-difficult-off')
+  const checkboxesOff = document.querySelectorAll('.checkbox-difficult-on')
   Array.from(checkboxesOff).forEach(checkbox => {
     checkbox.addEventListener('click', checkboxToggle.bind(this, ''))
   })
 
-  const checkboxesOn = document.querySelectorAll('.checkbox-difficult-on')
+  const checkboxesOn = document.querySelectorAll('.checkbox-difficult-off')
   Array.from(checkboxesOn).forEach(checkbox => {
     checkbox.addEventListener('click', checkboxToggle.bind(this, 'difficult'))
   })

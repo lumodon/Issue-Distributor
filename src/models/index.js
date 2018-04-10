@@ -47,7 +47,7 @@ function setIssueToDifficult(issueid) {
     SET options = 'difficult'
     WHERE issues.issueid = $1
   `
-  db.any(qs, [issueid])
+  return db.any(qs, [issueid])
 }
 
 function setIssueToNormal(issueid) {
@@ -56,7 +56,7 @@ function setIssueToNormal(issueid) {
     SET options = ''
     WHERE issues.issueid = $1
   `
-  db.any(qs, [issueid])
+  return db.any(qs, [issueid])
 }
 
 function getIssues() {
@@ -79,4 +79,6 @@ module.exports = {
   deleteCsr,
   addIssues,
   getIssues,
+  setIssueToDifficult,
+  setIssueToNormal,
 }

@@ -19,7 +19,6 @@ function deleteAnchorClickEvent(event) {
 }
 
 function checkboxToggle(option, event) {
-  event.preventDefault()
   const id = event.target.id.split('checkbox-')[1]
   fetch('/api/toggleissue', {
     'method': 'POST',
