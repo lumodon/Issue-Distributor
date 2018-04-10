@@ -8,6 +8,7 @@
   <title>Issue Distributor</title>
 </head>
 <body>
+  <h1 id="alert-message"></h1>
   <div class="container">
     <div id="input-section">
       <ul>
@@ -18,7 +19,7 @@
         <% for(let i = 0; i < csrs.length; i++) { %>
           <li>
             <div class="csr-info">
-              <a class="delete-csr" id="<%= 'delete-csr-' + csrs[i].id %>" href="#">X</a>
+              <a class="delete-csr" id="<%= 'delete-csr-' + csrs[i].csrid %>" href="#">X</a>
               <h3><%= csrs[i].username %></h3>
             </div>
           </li>
@@ -29,7 +30,7 @@
       <ul>
         <% for(let i = 0; i < csrs.length; i++) { %>
           <% if(csrs[i].issueList) { %>
-            <li class="output-csr" id="<%= 'csr-' + csrs[i].id %>">
+            <li class="output-csr" id="<%= 'csr-' + csrs[i].csrid %>">
               <h3><%= csrs[i].username %>:</h3>
               <% for(let j = 0; i < csrs[i].issueList.length; j++) { %>
                 <p><%= csrs[i].issueList[j] %></p>
@@ -40,6 +41,8 @@
       </ul>
     </div>
   </div>
+  <script type="text/javascript" src="/scripts/utils.js"></script>
+  <script type="text/javascript" src="/scripts/event-listeners.js"></script>
   <script type="text/javascript" src="/scripts/add-csr.js"></script>
   <script type="text/javascript" src="/scripts/main.js"></script>
 </body>

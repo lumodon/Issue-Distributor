@@ -48,3 +48,11 @@ ul {
   border: solid 1px black;
   padding: 30px;
 }
+
+#alert-message {
+  height: 100px;
+  width: 95vw;
+  text-align: center;
+  color: red;
+  display: none;
+}
