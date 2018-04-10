@@ -10,11 +10,12 @@
   <div class="container">
     <div class="input">
       <ul>
-        <li><input type="text" name="name" id="name"></li>
+        <li><input type="text" name="csr-username" id="csr-username"></li>
         <li><button id="add-csr">Add CSR</button></li>
       </ul>
     </div>
     <div class="output">
+      <div id="list-of-csrs"></div>
       <ul>
         <% for(let i = 0; i < csrs.length; i++) { %>
           <li>

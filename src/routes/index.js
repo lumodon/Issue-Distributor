@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { getCsrs, setCsrs, addIssue, clearIssues } = require('../models')
+const { getCsrs, addCsr, addIssue, clearIssues } = require('../models')
 
 router.get('/', async (request, response) => {
   const csrs = await getCsrs()
@@ -9,9 +9,9 @@ router.get('/', async (request, response) => {
   // response.render('index', csrs)
 })
 
-router.post('/api/setcsrs', (request, response) => {
-  const csrs = request.body
-  
+router.post('/api/addcsr', (request, response) => {
+  const { username } = request.body
+  addCsr(username)
 })
 
 module.exports = router

@@ -9,16 +9,12 @@ function getCsrs() {
   return db.manyOrNone(qs)
 }
 
-function setCsrs(csrs) {
-  const insertCsrStack = []
-  csrs.forEach(csr => {
-    const qs = `
-      INSERT INTO csrs (username)
-      VALUES ($1);
-    `
-    insertCsrStack.push(db.none(qs, [csr.username]))
-  })
-  return Promise.all(insertCsrStack)
+function addCsr(username) {
+  const qs = `
+    INSERT INTO csrs (username)
+    VALUES ($1);
+  `
+  db.none(qs, [username])
 }
 
 function addIssue(issueid, csrid) {
@@ -38,7 +34,7 @@ function clearIssues() {
 
 module.exports = {
   getCsrs,
-  setCsrs,
+  addCsr,
   addIssue,
   clearIssues,
 }
