@@ -1,6 +1,6 @@
 {
   "name": "Issue-Distributor",
-  "version": "3.3.8",
+  "version": "3.4.0",
   "description": "distributes items evenly amongst people via login to external server with private data",
   "main": "src/server.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "fetch": "node src/fetch-issues.js",
     "heroku:db": "heroku pg:backups:restore 'https://s3-us-west-1.amazonaws.com/lumodon-heroku-pg/issue_dist.dump' DATABASE_URL",
     "db:init": "psql -d issue_dist < ./src/db/schema.sql",
-    "db:migrate": "psql -d issue_dist < ./src/db/migration1.sql"
+    "db:migrate": "psql -d issue_dist < ./src/db/migration2.sql"
   },
   "repository": {
     "type": "git",
