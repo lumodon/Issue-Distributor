@@ -1,6 +1,6 @@
 {
   "name": "Issue-Distributor",
-  "version": "3.1.2rc",
+  "version": "3.1.3",
   "description": "distributes items evenly amongst people via login to external server with private data",
   "main": "src/server.js",
   "scripts": {
