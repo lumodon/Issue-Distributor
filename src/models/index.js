@@ -5,6 +5,7 @@ const {
   setIssueToDifficult,
   setIssueToNormal,
   clearIssues,
+  linkIssueCsr,
 } = require('./issues')
 
 module.exports = {
@@ -16,4 +17,5 @@ module.exports = {
   getIssues,
   setIssueToDifficult,
   setIssueToNormal,
+  linkIssueCsr,
 }

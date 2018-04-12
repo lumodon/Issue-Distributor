@@ -6,6 +6,7 @@ const { getCsrs,
   setIssueToNormal,
   getIssues,
   clearIssues,
+  linkIssueCsr,
   setIssueToDifficult
 } = require('../models')
 const { extractIssueData } = require('../utils/extract-issues-data')

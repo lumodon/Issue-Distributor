@@ -45,8 +45,13 @@ function clearIssues() {
   return db.none(qs)
 }
 
-function linkIssueCsr() {
-  
+function linkIssueCsr(issueid, csrid) {
+  const qs = `
+    UPDATE issues
+    SET csrid = $2
+    WHERE issues.issueid = $1
+  `
+  return db.any(qs, [issueid, csrid])
 }
 
 module.exports = {
@@ -55,4 +60,5 @@ module.exports = {
   getIssues,
   setIssueToDifficult,
   setIssueToNormal,
+  linkIssueCsr,
 }
