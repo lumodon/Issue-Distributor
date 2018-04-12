@@ -18,11 +18,17 @@ function addCsr(username) {
 
 function deleteCsr(csrid) {
   const qs = `
+    BEGIN;
+    UPDATE issues
+    SET csrid = NULL
+    WHERE issues.csrid = $1;
     DELETE FROM csrs
     WHERE csrs.csrid = $1
     RETURNING *;
+    COMMIT;
   `
   return db.one(qs, [csrid])
+    .catch(e => console.error)
 }
 
 module.exports = {
