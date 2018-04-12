@@ -16,17 +16,41 @@ router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
   const issueData = await getIssues()
   const { difficultIssueIds, issueIds } = await extractIssueData(issueData)
+  csrsData.map(csr => {
+    csr.issueData = csr.issueData || []
+    return csr
+  })
+  debugger;
   if(csrsData && csrsData.length > 0) {
-    const numPerCsr = Math.floor(issueIds.length / csrsData.length)
-    const leftOver = issueIds.length % csrsData.length
-    csrsData.forEach(csrObj => {
-      csrObj.issueList = issueIds.splice(0, numPerCsr)
+    csrsData.forEach(csr => {
+      issueData.forEach(issue => {
+        if(issue.csrid === csr.csrid) {
+          csr.issueList = csr.issueList ? [...csr.issueList, issue.issueid] : [issue.issueid]
+          issueData.splice(issueData.findIndex(i => i.issueid === issue.issueid), 1)
+        }
+      })
     })
-    let cylceIterator = 0
-    while(issueIds.length > 0) {
-      cylceIterator++
-      csrsData[cylceIterator % csrsData.length].issueList.push(issueIds.pop())
+    while(issueData.length > 0) {
+      let counts = {}
+      csrsData.forEach(csr => {
+        counts[csrsData.issueList] = counts[csrsData.issueList] || []
+        counts[csrsData.issueList].push(csrsData.csrid)
+      })
+      const index = Math.min(Object.keys(counts).map(m => Number(m)))
+      const receivingCsr = counts[Math.round(Math.random() * counts[index].length)]
+      csrsData.find(c => c.csrid === receivingCsr).issueData.push(issueData.pop().issueid)
     }
+
+  //   const numPerCsr = Math.floor(issueIds.length / csrsData.length)
+  //   const leftOver = issueIds.length % csrsData.length
+  //   csrsData.forEach(csrObj => {
+  //     csrObj.issueList = issueIds.splice(0, numPerCsr)
+  //   })
+  //   let cylceIterator = 0
+  //   while(issueIds.length > 0) {
+  //     cylceIterator++
+  //     csrsData[cylceIterator % csrsData.length].issueList.push(issueIds.pop())
+  //   }
   }
   response.render('index', { csrs: csrsData, difficultIssueIds })
 })
@@ -36,10 +60,10 @@ router.post('/api/issueids', async (request, response) => {
   if(validation === 'validation_confirmed') {
     let issueData = await getIssues()
     let newIssueIds = await getIssueIds()
-    newIssueIds = newIssueIds.map(issueId => {
-      const optionValue = issueData.find(it => it.issueid === issueId)
-      return { 'issueid': issueId, 'options': optionValue ? optionValue.options : '' }
-    })
+    issueData = issueData.filter(i => newIssueIds.findIndex(t => i.issueid === t.issueid) >= 0)
+      .concat(newIssueIds.filter(i => issueData.findIndex(t => t.issueid === i.issueid) < 0))
+    debugger;
+    console.log(issueData)
     await clearIssues()
     await addIssues(newIssueIds)
     response.send({ newIssueIds })
