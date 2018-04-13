@@ -28,14 +28,17 @@ router.get('/', async (request, response) => {
   })
   if(csrsData && csrsData.length > 0) {
     issueDistribution({ csrsData, issueData })
+    const avgQty = Math.floor(issueIds.length / csrsData.length)
+    const issuesRemaining = avgDeltaSum(csrsData, avgQty, csr => csr.issueData.length)
+    const availableIssues = pullExtraIssues(csrsData, avgQty, issuesRemaining)
+      .map(issue => issueData.find(i => i.issueid === issue))
+    distributeIssues({ issues: availableIssues, csrsData })
   }
+  csrsData.forEach(csr => {
+    csr.issueData.sort()
+  })
 
-  const avgQty = Math.floor(issueIds / csrsData.length)
-  const issuesNeeded = avgDeltaSum(csrsData, avgQty, csr => csr.issueData.length)
-  const availableIssues = pullExtraIssues(csrsData)
-  distributeIssues({ issues: availableIssues, csrsData })
-
-  response.render('index', { csrs: processedCsrsData, difficultIssueIds })
+  response.render('index', { csrs: csrsData, difficultIssueIds })
 })
 
 router.post('/api/issueids', async (request, response) => {

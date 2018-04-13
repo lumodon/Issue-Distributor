@@ -1,4 +1,5 @@
 const { distributeIssues } = require('../utils/distribtion-utils')
+const { linkIssueCsr } = require('../models')
 
 function issueDistribution({ csrsData, issueData }) {
   // Give csrs empty array for issueData

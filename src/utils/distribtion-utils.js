@@ -1,4 +1,4 @@
-const { linkIssueCsr } = require('../db')
+const { linkIssueCsr } = require('../models')
 
 function avgDeltaSum(list, avg, iterationFunc) {
   let sum = 0
@@ -9,15 +9,18 @@ function avgDeltaSum(list, avg, iterationFunc) {
   return sum
 }
 
-function pullExtraIssues(csrsData) {
+function pullExtraIssues(csrsData, avgQty, issuesRemaining) {
+  let availableIssues = []
   csrsData.forEach(csr => {
-    while(csr.issueData.length > avgQty && avgDeltaSum > 0) {
-      avgDeltaSum--
-      const rippedIssue = csr.issueData.sort().unshift()
+    while(csr.issueData.length > avgQty && issuesRemaining > 0) {
+      issuesRemaining--
+      csr.issueData.sort()
+      const rippedIssue = csr.issueData.pop()
       linkIssueCsr(rippedIssue.issueid, null)
       availableIssues = [...availableIssues, rippedIssue]
     }
   })
+  return availableIssues
 }
 
 function distributeIssues({ issues, csrsData }) {
