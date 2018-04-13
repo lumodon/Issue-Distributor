@@ -12,7 +12,7 @@ const { getCsrs,
 const { extractIssueData } = require('../utils/extract-issues-data')
 const { getIssueIds } = require('../utils/fetch-issues')
 const { issueDistribution } = require('../controllers/issue-distribution')
-const { avgDeltaSum } = require('../utils/average-delta-sum')
+const { avgDeltaSum, pullExtraIssues, distributeIssues } = require('../utils/distribtion-utils')
 
 router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
@@ -32,14 +32,8 @@ router.get('/', async (request, response) => {
 
   const avgQty = Math.floor(issueIds / csrsData.length)
   const issuesNeeded = avgDeltaSum(csrsData, avgQty, csr => csr.issueData.length)
-  csrsData.forEach(csr => {
-    let maxQty = {val: -Infinity, csr: null}
-    if(csr.issueData.length > maxQty.val) {
-      maxQty = { val: csr.issueData.length, csr: csr.csrid }
-    } else if(csr.issueData.length < maxQty.val - 2) {
-
-    }
-  })
+  const availableIssues = pullExtraIssues(csrsData)
+  distributeIssues({ issues: availableIssues, csrsData })
 
   response.render('index', { csrs: processedCsrsData, difficultIssueIds })
 })
