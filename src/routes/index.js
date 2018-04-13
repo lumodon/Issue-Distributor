@@ -11,11 +11,14 @@ const { getCsrs,
 } = require('../models')
 const { extractIssueData } = require('../utils/extract-issues-data')
 const { getIssueIds } = require('../utils/fetch-issues')
+const { issueDistribution } = require('../controllers/issue-distribution')
+const { avgDeltaSum } = require('../utils/average-delta-sum')
 
 router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
   const issueData = await getIssues()
   const { difficultIssueIds, issueIds } = await extractIssueData(issueData)
+
   // Remove difficult ids from data
   difficultIssueIds.forEach(difficultId => {
     const diffIndex = issueData.findIndex(i => i.issueid === difficultId)
@@ -24,48 +27,21 @@ router.get('/', async (request, response) => {
     }
   })
   if(csrsData && csrsData.length > 0) {
-    // Give csrs empty array for issueData
-    csrsData.map(csr => {
-      csr.issueData = csr.issueData || []
-      return csr
-    })
-    // Assign owned issues to csr specific
-    issueData.forEach(issue => {
-      const csrToPushTo = csrsData.find(csr => csr.csrid === issue.csrid)
-      if(!csrToPushTo) {
-        linkIssueCsr(issue.issueid, 'NULL')
-        return false
-      }
-      csrToPushTo.issueData.push(issue.issueid)
-      issueData.splice(issueData.findIndex(i => i.issueid === issue.issueid), 1)
-    })
-    let counts = {}
-    csrsData.forEach(csr => {
-      csr.issueData = csr.issueData || []
-      counts[csr.issueData.length] = counts[csr.issueData.length] || []
-      counts[csr.issueData.length].push(csr.csrid)
-    })
-    while(issueData.length > 0) {
-      const accumulator = []
-      for(let key in counts) {
-        if(counts[key].length > 0) accumulator.push(Number(key))
-      }
-      const index = Math.min(...accumulator)
-      const countIndex = Math.floor(Math.random() * counts[index].length)
-      const receivingCsr = csrsData.find(c => c.csrid === counts[index][countIndex])
-      const issueToAdd = issueData.pop().issueid
-      linkIssueCsr(issueToAdd, receivingCsr.csrid)
-      receivingCsr.issueData.push(issueToAdd)
-      counts[index].splice(counts[index].findIndex(i => i === receivingCsr.csrid), 1)
-      counts[index + 1] = counts[index + 1] ?
-        [...counts[index + 1], receivingCsr.csrid] :
-        [receivingCsr.csrid]
-    }
+    issueDistribution({ csrsData, issueData })
   }
+
+  const avgQty = Math.floor(issueIds / csrsData.length)
+  const issuesNeeded = avgDeltaSum(csrsData, avgQty, csr => csr.issueData.length)
   csrsData.forEach(csr => {
-    csr.issueData.sort((a,b) => Number(a) > Number(b))
+    let maxQty = {val: -Infinity, csr: null}
+    if(csr.issueData.length > maxQty.val) {
+      maxQty = { val: csr.issueData.length, csr: csr.csrid }
+    } else if(csr.issueData.length < maxQty.val - 2) {
+
+    }
   })
-  response.render('index', { csrs: csrsData, difficultIssueIds })
+
+  response.render('index', { csrs: processedCsrsData, difficultIssueIds })
 })
 
 router.post('/api/issueids', async (request, response) => {
@@ -77,7 +53,7 @@ router.post('/api/issueids', async (request, response) => {
       .concat(newIssueIds.filter(i => issueData.findIndex(t => t.issueid === i.issueid) < 0))
     console.log(issueData)
     await clearIssues()
-    await addIssues(newIssueIds)
+    await addIssues(issueData)
     response.send({ newIssueIds })
     return true
   }

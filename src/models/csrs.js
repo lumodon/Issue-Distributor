@@ -5,6 +5,7 @@ function getCsrs() {
     SELECT * FROM csrs;
   `
   return db.manyOrNone(qs)
+    .catch(e => console.error)
 }
 
 function addCsr(username) {
@@ -14,6 +15,7 @@ function addCsr(username) {
     RETURNING *;
   `
   return db.one(qs, [username])
+    .catch(e => console.error)
 }
 
 function deleteCsr(csrid) {

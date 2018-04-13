@@ -2,12 +2,12 @@ const { db } = require('../db')
 
 function addIssues(issueData) {
   const resolveIssueInsertions = []
-  issueData.forEach(issuedataitem => {
+  issueData.forEach(issue => {
     const qs = `
-      INSERT INTO issues (issueid, options)
-      VALUES ($1, $2);
+      INSERT INTO issues (issueid, options, csrid)
+      VALUES ($1, $2, $3);
     `
-    const issueInsertion = db.none(qs, [issuedataitem.issueid, issuedataitem.options])
+    const issueInsertion = db.none(qs, [issue.issueid, issue.options, issue.csrid])
     resolveIssueInsertions.push(issueInsertion)
   })
   return Promise.all(resolveIssueInsertions)
