@@ -45,13 +45,15 @@
         <% } %>
       </ul>
       <ul class='list-of-assigned-issues'>
-        <h3>Difficult Issues:</h3>
-        <% difficultIssueIds.forEach(difficultId => { %>
-          <li>
-            <span><%= difficultId %></span>
-            <input type="checkbox" class="checkbox-difficult-on" name="difficult" id="<%= 'checkbox-' + difficultId %>" checked>
-          </li>
-        <% })%>
+        <li>
+          <h3>Difficult Issues:</h3>
+          <% difficultIssueIds.forEach(difficultId => { %>
+            <div>
+              <span><%= difficultId %></span>
+              <input type="checkbox" class="checkbox-difficult-on" name="difficult" id="<%= 'checkbox-' + difficultId %>" checked>
+            </div>
+          <% })%>
+        </li>
       </ul>
     </div>
   </div>
