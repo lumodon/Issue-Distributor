@@ -44,6 +44,11 @@ ul {
   border-left: none;
 }
 
+#output-section > ul {
+  display: flex;
+  justify-content: space-around;
+}
+
 .container > div {
   border: solid 1px black;
   padding: 30px;
