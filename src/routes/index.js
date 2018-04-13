@@ -6,27 +6,38 @@ const { getCsrs,
   setIssueToNormal,
   getIssues,
   clearIssues,
+  linkIssueCsr,
   setIssueToDifficult
 } = require('../models')
 const { extractIssueData } = require('../utils/extract-issues-data')
 const { getIssueIds } = require('../utils/fetch-issues')
+const { issueDistribution } = require('../controllers/issue-distribution')
+const { avgDeltaSum, pullExtraIssues, distributeIssues } = require('../utils/distribtion-utils')
 
 router.get('/', async (request, response) => {
   const csrsData = await getCsrs()
   const issueData = await getIssues()
   const { difficultIssueIds, issueIds } = await extractIssueData(issueData)
-  if(csrsData && csrsData.length > 0) {
-    const numPerCsr = Math.floor(issueIds.length / csrsData.length)
-    const leftOver = issueIds.length % csrsData.length
-    csrsData.forEach(csrObj => {
-      csrObj.issueList = issueIds.splice(0, numPerCsr)
-    })
-    let cylceIterator = 0
-    while(issueIds.length > 0) {
-      cylceIterator++
-      csrsData[cylceIterator % csrsData.length].issueList.push(issueIds.pop())
+
+  // Remove difficult ids from data
+  difficultIssueIds.forEach(difficultId => {
+    const diffIndex = issueData.findIndex(i => i.issueid === difficultId)
+    if(diffIndex > 0) {
+      issueData.splice(diffIndex, 1)
     }
+  })
+  if(csrsData && csrsData.length > 0) {
+    issueDistribution({ csrsData, issueData })
+    const avgQty = Math.floor(issueIds.length / csrsData.length)
+    const issuesRemaining = avgDeltaSum(csrsData, avgQty, csr => csr.issueData.length)
+    const availableIssues = pullExtraIssues(csrsData, avgQty, issuesRemaining)
+      .map(issue => issueData.find(i => i.issueid === issue))
+    distributeIssues({ issues: availableIssues, csrsData })
   }
+  csrsData.forEach(csr => {
+    csr.issueData.sort()
+  })
+
   response.render('index', { csrs: csrsData, difficultIssueIds })
 })
 
@@ -35,12 +46,11 @@ router.post('/api/issueids', async (request, response) => {
   if(validation === 'validation_confirmed') {
     let issueData = await getIssues()
     let newIssueIds = await getIssueIds()
-    newIssueIds = newIssueIds.map(issueId => {
-      const optionValue = issueData.find(it => it.issueid === issueId)
-      return { 'issueid': issueId, 'options': optionValue ? optionValue.options : '' }
-    })
+    issueData = issueData.filter(i => newIssueIds.findIndex(t => i.issueid === t.issueid) >= 0)
+      .concat(newIssueIds.filter(i => issueData.findIndex(t => t.issueid === i.issueid) < 0))
+    console.log(issueData)
     await clearIssues()
-    await addIssues(newIssueIds)
+    await addIssues(issueData)
     response.send({ newIssueIds })
     return true
   }

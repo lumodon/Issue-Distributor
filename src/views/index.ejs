@@ -8,6 +8,7 @@
   <title>Issue Distributor</title>
 </head>
 <body>
+    <% console.log('csrs: ', csrs) %>
   <h1 id="alert-message"></h1>
   <div class="container">
     <div id="input-section">
@@ -30,13 +31,13 @@
     <div id="output-section">
       <ul>
         <% for(let i = 0; i < csrs.length; i++) { %>
-          <% if(csrs[i].issueList) { %>
+          <% if(csrs[i].issueData) { %>
             <li class="output-csr" id="<%= 'csr-' + csrs[i].csrid %>">
               <h3><%= csrs[i].username %>:</h3>
-              <% for(let j = 0; j < csrs[i].issueList.length; j++) { %>
+              <% for(let j = 0; j < csrs[i].issueData.length; j++) { %>
                 <div>
-                  <span><%= csrs[i].issueList[j] %></span>
-                  <input type="checkbox" class="checkbox-difficult-off" name="difficult" id="<%= 'checkbox-' + csrs[i].issueList[j] %>">
+                  <span><%= csrs[i].issueData[j] %></span>
+                  <input type="checkbox" class="checkbox-difficult-off" name="difficult" id="<%= 'checkbox-' + csrs[i].issueData[j] %>">
                 </div>
               <% } %>
             </li>
