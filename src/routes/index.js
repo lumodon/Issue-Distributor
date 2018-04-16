@@ -26,6 +26,7 @@ router.get('/', async (request, response) => {
       issueData.splice(diffIndex, 1)
     }
   })
+  debugger;
   if(csrsData && csrsData.length > 0) {
     issueDistribution({ csrsData, issueData })
     const avgQty = Math.floor(issueIds.length / csrsData.length)
@@ -46,9 +47,11 @@ router.post('/api/issueids', async (request, response) => {
   if(validation === 'validation_confirmed') {
     let issueData = await getIssues()
     let newIssueIds = await getIssueIds()
+    console.log('data before:', issueData)
     issueData = issueData.filter(i => newIssueIds.findIndex(t => i.issueid === t.issueid) >= 0)
-      .concat(newIssueIds.filter(i => issueData.findIndex(t => t.issueid === i.issueid) < 0))
-    console.log(issueData)
+      .concat(newIssueIds.filter(i => issueData.findIndex(t => t.issueid === i.issueid) < 0)
+      .map(i => ({issueid: i, options: null, csrid: null})))
+    console.log('data after:', issueData)
     await clearIssues()
     await addIssues(issueData)
     response.send({ newIssueIds })

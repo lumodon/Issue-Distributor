@@ -7,10 +7,12 @@ function addIssues(issueData) {
       INSERT INTO issues (issueid, options, csrid)
       VALUES ($1, $2, $3);
     `
+    console.log('issues added: ', issue)
     const issueInsertion = db.none(qs, [issue.issueid, issue.options, issue.csrid])
     resolveIssueInsertions.push(issueInsertion)
   })
   return Promise.all(resolveIssueInsertions)
+    .catch(e => console.error)
 }
 
 function setIssueToDifficult(issueid) {
