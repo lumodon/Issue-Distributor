@@ -39,7 +39,7 @@ function processPage(document) {
 }
 
 async function getIssueIds() {
-  const fetchOptions = getFetchOptions(await getLoginCookie())
+  const fetchOptions = getFetchOptions(await getLoginCookie().catch(err => console.error))
   const urlStart = 'https://icobo.cashbet.com/crm/work_queues/index/page:1'
   let issueIds = []
 
