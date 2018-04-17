@@ -34,13 +34,13 @@ function getFetchOptions(sessionToken) {
 function processPage(document) {
   const getChild = (domEle, column) => domEle.querySelector(`td:nth-child(${column})`)
   return Array.from(document.querySelectorAll('.issue.open'))
-    .filter(row => getChild(row, 6).textContent === 'CYNOPSIS KYC PENDING')
+    .filter(row => getChild(row, 6).textContent.includes('CYNOPSIS'))
     .map(row => Number(getChild(row, 5).textContent))
 }
 
 async function getIssueIds() {
   const fetchOptions = getFetchOptions(await getLoginCookie().catch(err => console.error))
-  const urlStart = 'https://icobo.cashbet.com/crm/work_queues/index/page:1'
+  const urlStart = 'https://icobo.cashbet.com/crm/work_queues/index/sort:category/direction:asc/page:1'
   let issueIds = []
 
   return fetchDelay(urlStart, fetchOptions)
@@ -58,7 +58,7 @@ async function getIssueIds() {
     })
     .then(async (numberOfPages) => {
       for(let pageIterator = 2; pageIterator <= numberOfPages; pageIterator++) {
-        const urlPage = `https://icobo.cashbet.com/crm/work_queues/index/page:${pageIterator}`
+        const urlPage = `https://icobo.cashbet.com/crm/work_queues/index/sort:category/direction:asc/page:${pageIterator}`
         const appendableIds = await fetchDelay(urlPage, fetchOptions)
           .then(async res => (await res.text()).toString())
           .then((resultBody) => new JSDOM(resultBody).window.document)
